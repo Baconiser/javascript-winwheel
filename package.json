@@ -1,0 +1,26 @@
+{
+  "name": "javascript-winwheel",
+  "version": "1.0.0",
+  "description": "Create spinning prize wheels on HTML canvas with Winwheel.js",
+  "main": "Winwheel.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "tween.js": "^16.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Baconiser/javascript-winwheel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Baconiser/javascript-winwheel/issues"
+  },
+  "homepage": "https://github.com/Baconiser/javascript-winwheel#readme"
+}

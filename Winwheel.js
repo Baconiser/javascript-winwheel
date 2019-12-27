@@ -1,3 +1,4 @@
+var TWEEN = require('tween.js');
 /*
     Winwheel.js, by Douglas McKechie @ www.dougtesting.net
     See website for tutorials and other documentation.
@@ -1734,17 +1735,13 @@ Winwheel.prototype.startAnimation = function()
         winwheelToDrawDuringAnimation = this;
 
         // Put together the properties of the greesock animation.
-        let properties = new Array(null);
-        properties[this.animation.propertyName] = this.animation.propertyValue; // Here we set the property to be animated and its value.
-        properties['yoyo']       = this.animation.yoyo;     // Set others.
-        properties['repeat']     = this.animation.repeat;
-        properties['ease']       = this.animation.easing;
-        properties['onUpdate']   = winwheelAnimationLoop;   // Call function to re-draw the canvas.
-        properties['onComplete'] = winwheelStopAnimation;   // Call function to perform actions when animation has finished.
+        let properties = this;
+        let animation = { ...this };
+        animation[this.animation.propertyName] = this.animation.propertyValue; // Here we set the property to be animated and its value.
 
         // Do the tween animation passing the properties from the animation object as an array of key => value pairs.
         // Keep reference to the tween object in the wheel as that allows pausing, resuming, and stopping while the animation is still running.
-        this.tween = TweenMax.to(this, this.animation.duration, properties);
+        this.tween = new TWEEN.Tween(this).to(animation, this.animation.duration).repeat(this.animation.repeat).yoyo(this.animation.yoyo).easing(this.animation.easing).onUpdate(winwheelAnimationLoop).onComplete(winwheelStopAnimation).start();
     }
 }
 
@@ -1808,11 +1805,11 @@ Winwheel.prototype.computeAnimation = function()
             }
 
             if (this.animation.repeat == null) {
-                this.animation.repeat = -1;           // -1 means it will repeat forever.
+                this.animation.repeat = Infinity;           // -1 means it will repeat forever.
             }
 
             if (this.animation.easing == null) {
-                this.animation.easing = 'Linear.easeNone';
+                this.animation.easing = TWEEN.Easing.Linear.None;
             }
 
             if (this.animation.yoyo == null) {
@@ -1839,7 +1836,7 @@ Winwheel.prototype.computeAnimation = function()
             }
 
             if (this.animation.easing == null) {
-                this.animation.easing = 'Power3.easeOut';     // This easing is fast start and slows over time.
+                this.animation.easing = TWEEN.Easing.Cubic.Out;     // This easing is fast start and slows over time.
             }
 
             if (this.animation.stopAngle == null) {
@@ -1885,7 +1882,7 @@ Winwheel.prototype.computeAnimation = function()
             }
 
             if (this.animation.easing == null) {
-                this.animation.easing = 'Power2.easeInOut';     // This is slow at the start and end and fast in the middle.
+                this.animation.easing = TWEEN.Easing.Quadratic.InOut;     // This is slow at the start and end and fast in the middle.
             }
 
             if (this.animation.yoyo == null) {
@@ -2149,7 +2146,7 @@ function winwheelPercentToDegrees(percentValue)
 // In order for the wheel to be re-drawn during the spin animation the function greesock calls needs to be outside
 // of the class as for some reason it errors if try to call winwheel.draw() directly.
 // ====================================================================================================================
-function winwheelAnimationLoop()
+function winwheelAnimationLoop(data)
 {
     if (winwheelToDrawDuringAnimation) {
         // Check if the clearTheCanvas is specified for this animation, if not or it is not false then clear the canvas.
